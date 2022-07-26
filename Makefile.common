@@ -1,0 +1,23 @@
+TM := norec
+SRCDIR := $(ROOT)/src
+LIBDIR := $(ROOT)/lib
+INCDIR := $(ROOT)/include
+LIBNOREC := $(LIBDIR)/lib$(TM).a
+
+LDFLAGS += -L$(LIBDIR) -l$(TM)
+CPPFLAGS += -I$(SRCDIR)
+
+CFLAGS += -Wall -Wno-unused-label -Wno-unused-function -std=c11
+CFLAGS  += -Os
+
+# DEFINES := -DTX_IN_MRAM
+DEFINES += -DACC_IN_MRAM
+DEFINES += -DBACKOFF
+
+NR_TANSACTIONS = 10
+NR_ACCOUNTS = 800
+NR_DPUS = 10
+
+DEFINES += -DN_TANSACTIONS=$(NR_TANSACTIONS) # 10 | 100 | 1000 | 10000 | 100000
+DEFINES += -DN_ACCOUNTS=$(NR_ACCOUNTS) # 800 -> low contention | 50 -> mid contention | 10 -> high contention
+DEFINES += -DN_DPUS=$(NR_DPUS)
