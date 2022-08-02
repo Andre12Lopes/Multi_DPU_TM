@@ -34,7 +34,7 @@ void check_total();
 Thread __mram_noinit t_mram[NR_TASKLETS];
 #endif
 
-__mram_noinit int bach[BACH_SIZE];
+__mram_noinit int bach[BACH_SIZE * NR_TASKLETS];
 
 int main()
 {
@@ -65,8 +65,8 @@ int main()
 
     for (int i = 0; i < BACH_SIZE; i += 2)
     {
-        ra = bach[i];
-        rb = bach[i + 1];
+        ra = bach[(BACH_SIZE * tid) + i];
+        rb = bach[(BACH_SIZE * tid) + (i + 1)];
 
 #ifdef TX_IN_MRAM
         START(&t_mram[tid]);

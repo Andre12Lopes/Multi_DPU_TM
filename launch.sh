@@ -1,5 +1,5 @@
 !/bin/bash
-echo -e "N_THREADS_DPU\tN_DPUS\tN_TXS\tTIME" > results.txt
+echo -e "N_THREADS_DPU\tN_TANSACTIONS\tN_BACHES\tN_DPUS\tCOPY_TIME\tTOTAL_TIME" > results.txt
 
 for (( i = 1; i <= 10000; i *= 10 )); do
 	make clean
