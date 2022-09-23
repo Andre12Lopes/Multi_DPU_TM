@@ -7,7 +7,7 @@
 
 using namespace dpu;
 
-#define BACH_SIZE (N_TANSACTIONS * 2)
+#define BACH_SIZE ((N_TANSACTIONS / 100) * 2)
 #define NR_TASKLETS 11
 
 void create_bach(DpuSet &system, std::vector<std::vector<int>> &bach);
@@ -66,7 +66,7 @@ void create_bach(DpuSet &system, std::vector<std::vector<int>> &bach)
 {
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> rand(0, N_ACCOUNTS);
+    std::uniform_int_distribution<std::mt19937::result_type> rand(0, N_ACCOUNTS - 100);
 
     for (unsigned i = 0; i < system.dpus().size(); ++i)
     {

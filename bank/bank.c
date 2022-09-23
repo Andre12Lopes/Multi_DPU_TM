@@ -15,7 +15,7 @@
 
 #define TRANSFER    2
 #define ACCOUNT_V   1000
-#define BACH_SIZE   (N_TANSACTIONS * 2)
+#define BACH_SIZE   ((N_TANSACTIONS / 100) * 2)
 
 __host uint64_t n_tasklets;
 
@@ -65,34 +65,37 @@ int main()
 
     for (int i = 0; i < BACH_SIZE; i += 2)
     {
-        ra = bach[(BACH_SIZE * tid) + i];
-        rb = bach[(BACH_SIZE * tid) + (i + 1)];
+        for (int j = 0; j < 100; ++j)
+        {
+            ra = bach[(BACH_SIZE * tid) + i] + j;
+            rb = bach[(BACH_SIZE * tid) + (i + 1)] + j;
 
 #ifdef TX_IN_MRAM
-        START(&t_mram[tid]);
+            START(&t_mram[tid]);
 
-        a = LOAD(&t_mram[tid], &bank[ra]);
-        a -= TRANSFER;
-        STORE(&t_mram[tid], &bank[ra], a);
+            a = LOAD(&t_mram[tid], &bank[ra]);
+            a -= TRANSFER;
+            STORE(&t_mram[tid], &bank[ra], a);
 
-        b = LOAD(&t_mram[tid], &bank[rb]);
-        b += TRANSFER;
-        STORE(&t_mram[tid], &bank[rb], b);
+            b = LOAD(&t_mram[tid], &bank[rb]);
+            b += TRANSFER;
+            STORE(&t_mram[tid], &bank[rb], b);
 
-        COMMIT(&t_mram[tid]);
+            COMMIT(&t_mram[tid]);
 #else
-        START(&t);
+            START(&t);
 
-        a = LOAD(&t, &bank[ra]);
-        a -= TRANSFER;
-        STORE(&t, &bank[ra], a);
+            a = LOAD(&t, &bank[ra]);
+            a -= TRANSFER;
+            STORE(&t, &bank[ra], a);
 
-        b = LOAD(&t, &bank[rb]);
-        b += TRANSFER;
-        STORE(&t, &bank[rb], b);
+            b = LOAD(&t, &bank[rb]);
+            b += TRANSFER;
+            STORE(&t, &bank[rb], b);
 
-        COMMIT(&t);
+            COMMIT(&t);
 #endif
+        }
     }
 
     // ------------------------------------------------------
