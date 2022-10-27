@@ -22,9 +22,9 @@ __host uint64_t n_tasklets;
 BARRIER_INIT(my_barrier, NR_TASKLETS);
 
 #ifdef ACC_IN_MRAM
-int __mram_noinit bank[N_ACCOUNTS];
+int64_t __mram_noinit bank[N_ACCOUNTS];
 #else
-int bank[N_ACCOUNTS];
+int64_t bank[N_ACCOUNTS];
 #endif
 
 void initialize_accounts();
