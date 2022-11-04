@@ -15,16 +15,16 @@
 
 #define TRANSFER    2
 #define ACCOUNT_V   1000
-#define BACH_SIZE   ((N_TANSACTIONS / 100) * 2)
+#define BACH_SIZE   (N_TANSACTIONS * 2)
 
 __host uint64_t n_tasklets;
 
 BARRIER_INIT(my_barrier, NR_TASKLETS);
 
 #ifdef ACC_IN_MRAM
-int64_t __mram_noinit bank[N_ACCOUNTS];
+int __mram_noinit bank[N_ACCOUNTS];
 #else
-int64_t bank[N_ACCOUNTS];
+int bank[N_ACCOUNTS];
 #endif
 
 void initialize_accounts();
@@ -65,10 +65,8 @@ int main()
 
     for (int i = 0; i < BACH_SIZE; i += 2)
     {
-        for (int j = 0; j < 100; ++j)
-        {
-            ra = bach[(BACH_SIZE * tid) + i] + j;
-            rb = bach[(BACH_SIZE * tid) + (i + 1)] + j;
+        ra = bach[(BACH_SIZE * tid) + i];
+        rb = bach[(BACH_SIZE * tid) + (i + 1)];
 
 #ifdef TX_IN_MRAM
             START(&t_mram[tid]);
@@ -95,14 +93,13 @@ int main()
 
             COMMIT(&t);
 #endif
-        }
     }
 
     // ------------------------------------------------------
 
     barrier_wait(&my_barrier);
 
-    // check_total();
+    check_total();
     
     return 0;
 }
@@ -122,16 +119,16 @@ void check_total()
 {
     if (me() == 0)
     {
-        printf("[");
+        // printf("[");
         unsigned int total = 0;
         for (int i = 0; i < N_ACCOUNTS; ++i)
         {
-            printf("%u,", bank[i]);
+            // printf("%u,", bank[i]);
             total += bank[i];
         }
-        printf("]\n");
+        // printf("]\n");
 
-        printf("TOTAL = %u\n", total);
+        // printf("TOTAL = %u\n", total);
 
         assert(total == (N_ACCOUNTS * ACCOUNT_V));
     }
